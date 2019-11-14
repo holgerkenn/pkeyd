@@ -1,0 +1,41 @@
+
+all:	dbprint dbconv pkeyd
+
+prefix=@prefix@
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@
+
+defs.h:
+	echo "#define ETCDIR \"@sysconfdir@\"" >defs.h
+	echo "#define VARDIR \"@localstatedir@\"" >> defs.h
+
+TCPlib.o:	TCPlib.c
+	@CC@ @CFLAGS@ @CPPFLAGS@ @DEFS@ -I. -c TCPlib.c
+
+pkeyd:	pkeyd.o TCPlib.o 
+	@CC@ @LDFLAGS@ -o pkeyd pkeyd.o TCPlib.o @LIBS@
+
+pkeyd.o:	pkeyd.c defs.h
+	@CC@ @CFLAGS@ @CPPFLAGS@ @DEFS@ -I. -c pkeyd.c
+
+dbprint:	dbprint.o
+	@CC@ @LDFLAGS@ -o dbprint dbprint.o @LIBS@
+
+dbprint.o:	dbprint.c
+	@CC@ @CFLAGS@ @CPPFLAGS@ @DEFS@ -I. -c dbprint.c 
+
+dbconv:	dbconv.o
+	@CC@ @LDFLAGS@ -o dbconv dbconv.o @LIBS@
+
+dbconv.o:	dbconv.c
+	@CC@ @CFLAGS@ @CPPFLAGS@ @DEFS@ -I. -c dbconv.c
+
+clean:
+	rm *.o dbconv dbprint pkeyd defs.h
+
+install:
+	@INSTALL@ dbprint dbconf pkeyd @bindir@
+	@INSTALL@ pkeyd.route pkeyd.conf @sysconfdir@
+
