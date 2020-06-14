@@ -137,7 +137,7 @@ main(int argc, char *argv[])
 {
 	struct sockaddr_in fsin;/* the address of a client	 */
 	int             alen;	/* length of client's address	 */
-	int             ssock;	/* slave server socket		 */
+	int             ssock;	/* accepted server socket		 */
 	int             i;
 	int             fd;
 	char            pbuf[10];	/* Buffer for PID */
